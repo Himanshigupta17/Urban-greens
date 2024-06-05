@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select City</title>
+    <style>
+        #map{
+            position:fixed;
+            top: 40%;
+            left: 25%;
+            right: 30%;
+            bottom: 0px;
+            width: 50%; 
+            height:50%;
+        }
+        img {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1; /* Place the video behind other content */
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            margin: 0;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        select, input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            background-color: #333;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #555;
+        }
+
+        h1 {
+            font-size: 18px;
+            word-wrap: break-word;
+        }
+        #Tree{
+            white-space: pre-line;
+        }
+        #sol {
+        white-space: pre-line;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 20%; /* Adjust the width as needed */
+        background-color: #f0f0f09b; /* Optional: Set background color */
+        overflow-y: auto; /* Enable vertical scrollbar if content overflows */
+        padding: 20px; /* Optional: Add padding for content */
+        }
+        #sol p {
+            cf
+            color: #333; /* Text color */
+            font-family: Arial, sans-serif; /* Font family */
+            font-size: 40px; /* Font size */
+            line-height: 2; /* Line height */
+            text-align: justify; /* Text alignment */
+        }
+    </style>  
+   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+    <img src="{{ url_for('static', filename='bgimg.jpg') }}" alt="Logo" class="logo">
+    <h2>Select a City</h2>
+    <form action="{{url_for('form')}}" method="post">
+        <label for="city">Choose a city:</label>
+        <select id="city" name="city">
+            <option value="SouthDelhi">South Delhi</option>
+            <option value="SouthWestDelhi">South West Delhi</option>
+            <option value="SouthEastDelhi">South East Delhi</option>
+            <option value="EastDelhi">East Delhi/Shahdara/North East</option>
+            <option value="WestDelhi">West Delhi</option>
+            <option value="NorthDelhi">North Delhi</option>
+            <option value="NorthWestDelhi">North West Delhi</option>
+            <option value="NewDelhi">New Delhi</option>
+            <option value="CentralDelhi">Central Delhi</option>
+        </select>
+        <br>
+        <input type="submit" value="Submit">
+        <br>
+        <h1 id="Tree">Output: {{str}} </h1>
+        <div id="sol"><h4>Other Solutions</h4>{{sol | safe}}</div>
+        <input type="hidden" id="coordData" name="coordData" value="{{ coordinates|tojson }}">
+    </form>
+        <div id="map" ></div>
+        <script>
+            var coordData = JSON.parse(document.getElementById('coordData').value);
+            var map = L.map('map').setView([28.6139, 77.2090], 11); 
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            // Your GeoJSON coordinates
+            var geojsonFeature = {
+                "type": "Feature",
+                "properties": {},
+                "geometry": {
+                    "type": "Polygon",
+                    "coordinates": [        
+                    coordData
+                ]
+                }
+            };
+        
+            // Create a GeoJSON layer and add it to the map
+            L.geoJSON(geojsonFeature).addTo(map);
+           // map.fitBounds(geojsonLayer.getBounds());
+        
+        </script>
+</body>
+</html>

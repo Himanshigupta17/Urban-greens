@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Map Visualization</title>
+    <script src="https://earthengine.googleapis.com" type="text/javascript"></script>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        google.earthengine.load("users/your-username/polygon_asset", function () {
+            // Add your Google Earth Engine code here to create and display the map.
+            var polygon = ee.FeatureCollection('users/your-username/polygon_asset');
+            var map = new google.earthengine.Map();
+            map.centerObject(polygon, 10);
+            map.addLayer(polygon, {color: 'FF0000'}, 'Polygon');
+            map.addTo('map');
+        });
+    </script>
+</body>
+</html>
+
